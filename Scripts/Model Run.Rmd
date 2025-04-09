@@ -1,0 +1,52 @@
+#1. Function
+```{r}
+#Model
+source('./Functions/WB_Model_Run.R')
+
+#Output processing
+source("./Functions/WB_Model_Output_Processing.R")
+```
+
+#2. Run model
+```{r}
+wbresults <- WBModel(MaxIterations = 1, 
+                     runID = "Example_run",   
+                     MaxDays = 1*365,
+                     FileWildBoarMat  = "./Input/MatrixLandscape.csv",  
+                     FileStartPixels  = "./Input/Startpopulation_pixels.csv",
+                     FencePorosity    = 0.05,
+                     propAdultRepro   = 0.95,        
+                     propSubadRepro   = 0.9,
+                     propPigletRepro  = 0.5,
+                     SettlingProb     = c(0.5,1),
+                     MyOutputFolder     = "./Output/Example_run/",
+                     SurvivalProbAdF  =   0.71,                      
+                     SurvivalProbAdM  =   0.76,                    
+                     SurvivalProbSAdF =   0.6,                       
+                     SurvivalProbSAdM =   0.5,                      
+                     SurvivalProbPigF =   0.52,                        
+                     SurvivalProbPigM =   0.52, 
+                     MinCap1          = 12,
+                     ModeCap1         = 24,
+                     MaxCap1          = 30,
+                     MinCap2          = 6,
+                     ModeCap2         = 18,
+                     MaxCap2          = 24,,
+                     MinCap3          = 1,
+                     ModeCap3         = 1,
+                     MaxCap3          = 2,
+                     FemaleInitMin    = 3,
+                     FemaleInitMax    = 4)
+```
+
+#3. Process output
+```{r}
+WBModel.output.process(runID = "Example_run",
+                         outputfolder =  "./Output/Example_run/",
+                         maxit = 1,
+                         MaxDays = 1*365,
+                         FileWildBoarMatO = "./Input/MatrixLandscape.csv",
+                         mytif_name  = "./Input/Habitat_suitability.tif", 
+                         mode = "noncumulative")
+```
+
