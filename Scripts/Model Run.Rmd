@@ -2,51 +2,70 @@
 ```{r}
 #Model
 source('./Functions/WB_Model_Run.R')
-
-#Output processing
-source("./Functions/WB_Model_Output_Processing.R")
 ```
 
 #2. Run model
 ```{r}
-wbresults <- WBModel(MaxIterations = 1, 
-                     runID = "Example_run",   
-                     MaxDays = 1*365,
-                     FileWildBoarMat  = "./Input/MatrixLandscape.csv",  
-                     FileStartPixels  = "./Input/Startpopulation_pixels.csv",
-                     FencePorosity    = 0.05,
-                     propAdultRepro   = 0.95,        
-                     propSubadRepro   = 0.9,
-                     propPigletRepro  = 0.5,
-                     SettlingProb     = c(0.5,1),
-                     MyOutputFolder     = "./Output/Example_run/",
-                     SurvivalProbAdF  =   0.71,                      
+wbresults <- WBModel(MaxIterations    = 1, 
+                     MaxDays          = 1*365,
+                     runID            = "Example_run",
+                     
+                     # POPULATION INITIALIZATION
+                     FemaleInitMin    = 3,
+                     FemaleInitMax    = 4,
+                     AgeProbab        = c(0.61, 0.26, 0.11, 0.01, 0.0024, 0.0024, 0, 0, 0),  # Initialization of age of adults (from 2 to 10)
+                     FemPropGroup     = 8.7,              # % of adult females in a group  
+                     MalPropGroup     = 4.3,              # % of adult males in a group
+                     SubAPropGroup    = 26.6,             # % of subadults in a group
+                     PigletPropGroup  = 60.4,             # % of piglets in a group
+                     
+                     # YEARLY SURVIVAL PROBABILITIES (Bieber and Ruff)
+                     SurvivalProbAdF  =   0.71,             
                      SurvivalProbAdM  =   0.76,                    
-                     SurvivalProbSAdF =   0.6,                       
+                     SurvivalProbSAdF =   0.6,                      
                      SurvivalProbSAdM =   0.5,                      
                      SurvivalProbPigF =   0.52,                        
                      SurvivalProbPigM =   0.52, 
+                     
+                     # REPRODUCTION
+                     propAdultRepro   = 0.95,       ## proporiton of adults females that will reproduce 
+                     propSubadRepro   = 0.9,
+                     propPigletRepro  = 0.5,
+                     RepProbList      = list(Week=1:52,    ## probability of birth by week of the year
+                                              Prob=c(0.020, 0.016, 0.024, 0.024, 0.027, 0.026, 0.030, 
+                                                     0.030, 0.043, 0.032, 0.035, 0.041, 0.038, 0.036, 
+                                                     0.036, 0.034, 0.036, 0.034, 0.027, 0.025, 0.031, 
+                                                     0.023, 0.022, 0.020, 0.017, 0.018, 0.013, 0.016, 
+                                                     0.014, 0.015, 0.013, 0.010, 0.008, 0.011, 0.008, 
+                                                     0.006, 0.007, 0.008, 0.006, 0.006, 0.006, 0.006, 
+                                                     0.008, 0.004, 0.008, 0.008, 0.010, 0.011, 0.012, 
+                                                     0.012, 0.014, 0.019)),
+                      NumOfSprProbList = list(Number=0:11,  ## probability of the number of offspring per litter
+                                              Prob=c(0,0.0699, 0.1675, 0.2473, 0.2416, 0.1553, 0.0728, 0.0293, 0.0131, 0.0075, 0.0048, 0.003)),
+                     
+                     # Max caring capacity 
                      MinCap1          = 12,
                      ModeCap1         = 24,
                      MaxCap1          = 30,
                      MinCap2          = 6,
                      ModeCap2         = 18,
-                     MaxCap2          = 24,,
+                     MaxCap2          = 24,
                      MinCap3          = 1,
                      ModeCap3         = 1,
                      MaxCap3          = 2,
-                     FemaleInitMin    = 3,
-                     FemaleInitMax    = 4)
-```
+                     
+                     # DISPERSION
+                     SettlingProb     = c(0.5,1),
+                     PmoveCatFem      = c(0.75,0.25),               # Probability of females settling in category 1 or 2 pixels
+                     HabitatProb      = c(0.50,0.33, 0.17),         # The probability to select a new pixel while male walking 
+                     FencePorosity    = 0.05,
+                     
+                     # File pathways
+                     FileWildBoarMat  = "./Input/MatrixLandscape.csv",  
+                     FileStartPixels  = "./Input/Startpopulation_pixels.csv",
+                     FileBarriersPixels = "./Input/Barriers.csv",
+                     MyOutputFolder     = "./Output/Example_run/"
+)
+  
 
-#3. Process output
-```{r}
-WBModel.output.process(runID = "Example_run",
-                         outputfolder =  "./Output/Example_run/",
-                         maxit = 1,
-                         MaxDays = 1*365,
-                         FileWildBoarMatO = "./Input/MatrixLandscape.csv",
-                         mytif_name  = "./Input/Habitat_suitability.tif", 
-                         mode = "noncumulative")
 ```
-
